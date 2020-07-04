@@ -76,6 +76,9 @@ uint16_t PS2Keyboard::getConsumerKeys()
 
 bool PS2Keyboard::initReset()
 {
+	//Modify
+	return true;
+
 	bool resetStatus = write(0xff, false);  // Reset signal - 0xFF
 
 	if (!resetStatus)
