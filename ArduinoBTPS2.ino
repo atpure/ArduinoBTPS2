@@ -20,14 +20,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
-#include "PS2Mouse.h"
 #include "PS2Keyboard.h"
 #include "Bluetooth.h"
 
-#define MOUSE_CLOCK 2
-#define MOUSE_DATA 3
-#define KEYBOARD_CLOCK 4
-#define KEYBOARD_DATA 5
+//#define KEYBOARD_CLOCK 4
+//#define KEYBOARD_DATA 5
+
+// Modify
+#define KEYBOARD_CLOCK 2
+#define KEYBOARD_DATA 4
 
 #define _DEBUG 0
 
@@ -37,7 +38,6 @@
 #define HARDWARE_SERIAL_RATE 115200
 #endif
 
-PS2Mouse mouse(MOUSE_CLOCK, MOUSE_DATA);
 PS2Keyboard keyboard(KEYBOARD_CLOCK, KEYBOARD_DATA);
 
 #if _DEBUG
@@ -46,7 +46,13 @@ PS2Keyboard keyboard(KEYBOARD_CLOCK, KEYBOARD_DATA);
 #define BLUETOOTH_DEBUG_BAUD 9600
 Bluetooth bluetooth(BLUETOOTH_DEBUG_BAUD, true, BLUETOOTH_DEBUG_RX, BLUETOOTH_DEBUG_TX);
 #else
-Bluetooth bluetooth(HARDWARE_SERIAL_RATE, false, 0, 0);
+//Bluetooth bluetooth(HARDWARE_SERIAL_RATE, false, 0, 0);
+
+// Modify
+#define BLUETOOTH_DEBUG_RX 7
+#define BLUETOOTH_DEBUG_TX 8
+#define BLUETOOTH_DEBUG_BAUD 115200
+Bluetooth bluetooth(BLUETOOTH_DEBUG_BAUD, true, BLUETOOTH_DEBUG_RX, BLUETOOTH_DEBUG_TX);
 #endif
 
 void setup()
@@ -59,17 +65,6 @@ void setup()
 	delay(250);
 
 #if _DEBUG
-	Serial.println("Initializing mouse...");	
-#endif
-
-	bool mouseStatus = mouse.init();
-
-#if _DEBUG
-	if (mouseStatus)
-		Serial.println("Mouse detected!");
-	else
-		Serial.println("No mouse detected.");
-
 	Serial.println("Initializing keyboard...");
 #endif
 
@@ -87,11 +82,6 @@ void setup()
 
 void loop()
 {
-	if (mouse.available())
-	{
-		bluetooth.sendMouseState(mouse.getBtnState(), mouse.getDeltaX(), -mouse.getDeltaY(), -mouse.getDeltaZ());
-	}
-
 	if (keyboard.available())
 	{
 		bluetooth.sendKeyboardState(keyboard.getKeyModifiers(), keyboard.getKeysPressed());

@@ -49,17 +49,6 @@ Bluetooth::~Bluetooth()
 	}
 }
 
-void Bluetooth::sendMouseState(uint8_t btnState, uint8_t deltaX, uint8_t deltaY, uint8_t deltaZ)
-{
-	_serialStream->write((uint8_t)0xFD);
-	_serialStream->write((uint8_t)0x05);
-	_serialStream->write((uint8_t)0x02);
-	_serialStream->write(btnState);
-	_serialStream->write(deltaX);
-	_serialStream->write(deltaY);
-	_serialStream->write(deltaZ);
-}
-
 void Bluetooth::sendKeyboardState(uint8_t modifiers, uint8_t * keysPressed)
 {
 	_serialStream->write((uint8_t)0xFD);
